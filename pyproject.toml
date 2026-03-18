@@ -1,0 +1,25 @@
+[project]
+name = "work-buddy"
+version = "0.1.0"
+description = "Remote Work Buddy - AI agent for remote worker productivity and well-being"
+readme = "README.md"
+authors = [
+    { name = "waleed260", email = "vkdeku20@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "openai-agents>=0.0.3",
+    "google-genai>=1.0.0",
+    "httpx>=0.28.0",
+    "pydantic>=2.10.0",
+    "python-dotenv>=1.0.0",
+    "openai>=2.25.0",
+    "agents>=1.4.0",
+]
+
+[project.scripts]
+work-buddy = "work_buddy:main"
+
+[build-system]
+requires = ["uv_build>=0.9.25,<0.10.0"]
+build-backend = "uv_build"
