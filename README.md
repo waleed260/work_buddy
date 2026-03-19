@@ -184,30 +184,7 @@ work_buddy/
 └── README.md                # This file
 ```
 
-## 🔧 Configuration
 
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `OPENAI_API_KEY` | OpenAI API key | - |
-| `GEMINI_API_KEY` | Gemini API key (alternative) | - |
-| `GEMINI_BASE_URL` | Gemini API base URL | `https://generativelanguage.googleapis.com` |
-| `TRACING_ENABLED` | Enable tracing | `false` |
-
-### API Key Setup
-
-**For OpenAI:**
-```bash
-export OPENAI_API_KEY=sk-...
-```
-
-**For Gemini:**
-> Note: The OpenAI Agents SDK requires an OpenAI-compatible API. For Gemini, you may need to use an OpenAI proxy or use OpenAI models directly.
-
-```bash
-export GEMINI_API_KEY=your_key
-export GEMINI_BASE_URL=https://generativelanguage.googleapis.com
 ```
 
 ## 🧪 Testing
