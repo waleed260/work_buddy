@@ -239,24 +239,4 @@ python -c "from work_buddy.test_agent import main; main()"
 | 14:00 - 16:00 | Deep Work Session |
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests: `python -c "from work_buddy.test_agent import main; main()"`
-5. Submit a pull request
-
-## 📄 License
-
-MIT License - See LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [OpenAI Agents SDK](https://github.com/openai/openai-agents-python)
-- Inspired by remote work best practices
-- Designed for work-life balance and productivity
-
----
-
-**How else can I assist?** 🚀
+ 🚀
