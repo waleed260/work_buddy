@@ -168,16 +168,6 @@ Remote Work Buddy enforces these guardrails by default:
 | **Privacy** | No sensitive data logging (passwords, API keys, etc.) |
 | **Meeting Duration** | Maximum 2 hours per meeting |
 
-## 📁 Project Structure
-
-```
-work_buddy/
-├── src/work_buddy/
-│   ├── __init__.py          # Package entry point
-│   ├── agent.py             # Main RemoteWorkBuddy agent
-│   ├── sub_agents.py        # Specialized sub-agents
-
-```
 
 
 ```
