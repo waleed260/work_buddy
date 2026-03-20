@@ -176,12 +176,7 @@ work_buddy/
 │   ├── __init__.py          # Package entry point
 │   ├── agent.py             # Main RemoteWorkBuddy agent
 │   ├── sub_agents.py        # Specialized sub-agents
-│   ├── tools.py             # Tool functions (OpenAI SDK compatible)
-│   ├── guardrails.py        # Guardrails implementation
-│   └── test_agent.py        # Test suite
-├── pyproject.toml           # Project configuration
-├── .env.example             # Environment variables template
-└── README.md                # This file
+
 ```
 
 
