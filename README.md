@@ -214,14 +214,4 @@ python -c "from work_buddy.test_agent import main; main()"
 ✅ Great job maintaining regular breaks!
 ```
 
-### Schedule Table
-```
-📅 **Today's Schedule**
 
-| Time | Event |
-|------|-------|
-| 10:00 - 10:30 | Team Standup |
-| 14:00 - 16:00 | Deep Work Session |
-```
-
- 🚀
