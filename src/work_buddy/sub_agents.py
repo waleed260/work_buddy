@@ -3,7 +3,7 @@ Sub-agents for Remote Work Buddy AI Agent.
 Specialized agents for meetings, wellness, and task management.
 """
 
-from agents import Agent
+from agents.agent import Agent
 from .tools import (
     check_calendar_events,
     add_calendar_event,

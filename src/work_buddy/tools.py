@@ -7,7 +7,7 @@ Compatible with OpenAI Agents SDK.
 from datetime import datetime, timedelta
 from typing import Optional
 from pydantic import BaseModel
-from agents import function_tool
+from agents.tool import function_tool
 
 
 class CalendarEvent(BaseModel):

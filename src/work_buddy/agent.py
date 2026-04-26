@@ -1,11 +1,12 @@
 """
 Remote Work Buddy - Main AI Agent
-Built with OpenAI Agents SDK and Google Gemini integration.
+Built with OpenAI Agents SDK.
 """
-form dotenv import load_env
+from dotenv import load_dotenv
 import os
 from typing import Optional
-from agents import Agent, Runner,set_tracing_disabled 
+from agents.agent import Agent
+from agents.run import Runner 
 from .tools import (
     check_calendar_events,
     add_calendar_event,
@@ -38,8 +39,7 @@ from .sub_agents import (
     create_email_agent,
     create_slack_agent,
 )
-load_env()
-set_tracing_disabled(True)
+load_dotenv()
 
 class RemoteWorkBuddy:
     """
@@ -70,12 +70,15 @@ class RemoteWorkBuddy:
         self.guardrails = Guardrails(timezone=timezone, work_end_hour=20)
         
         # Store API configuration
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY") or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-        self.base_url = base_url or os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com")
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        self.base_url = base_url or os.getenv("OPENAI_BASE_URL")
+        self.model = os.getenv("OPENAI_MODEL", "gpt-4")
         
-        # Set the API key for the OpenAI Agents SDK
+        # Set environment variables for the SDK
         if self.api_key:
-            set_default_openai_key(self.api_key)
+            os.environ["OPENAI_API_KEY"] = self.api_key
+        if self.base_url:
+            os.environ["OPENAI_BASE_URL"] = self.base_url
         
         # Initialize sub-agents
         self.meeting_agent = create_meeting_agent()
@@ -89,10 +92,14 @@ class RemoteWorkBuddy:
     
     def _create_main_agent(self) -> Agent:
         """Create the main Remote Work Buddy agent."""
+        if not self.api_key:
+            return None
+        
         return Agent(
             name="RemoteWorkBuddy",
             instructions=self._get_system_instructions(),
             tools=self._get_agent_tools(),
+            model=self.model,
         )
     
     def _get_system_instructions(self) -> str:
@@ -211,25 +218,17 @@ When specialized help is needed:
         Returns:
             Agent's response
         """
-        if not self.api_key:
-            return "⚠️ API key not configured. Please set OPENAI_API_KEY or GEMINI_API_KEY environment variable.\n\nIn mock mode, you can still use the direct tool functions."
+        if not self.api_key or not self.main_agent:
+            return "⚠️ API key not configured. Please set OPENAI_API_KEY environment variable.\n\nIn mock mode, you can still use the direct tool functions."
         
         try:
-            if self.tracing_enabled:
-                with trace("RemoteWorkBuddy"):
-                    result = await Runner.run(
-                        self.main_agent,
-                        user_message,
-                    )
-                    return result.final_output
-            else:
-                result = await Runner.run(
-                    self.main_agent,
-                    user_message,
-                )
-                return result.final_output
+            result = await Runner.run(
+                self.main_agent,
+                user_message,
+            )
+            return result.final_output
         except Exception as e:
-            return f"⚠️ API Error: {str(e)}\n\nPlease check your API key configuration."
+            return f"⚠️ API Error: {str(e)}\n\nPlease check your API key and model configuration."
     
     def get_daily_schedule(self) -> str:
         """Get today's schedule as a formatted table."""
