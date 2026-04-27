@@ -510,4 +510,35 @@ Potential additions:
 ---
 
 ## Testing
+Run the test suite:
+```bash
+python3 -m work_buddy.test_agent
+```
+
+The test suite covers:
+- Agent initialization
+- Chat/Greeting functionality
+- Daily scheduling
+- Task management
+- Calendar management
+- Wellness tracking
+- Guardrails validation
+- Email drafting
+- Meeting transcription
+
+---
+
+## Support & Documentation
+
+- **README.md** - User guide and quick start
+- **AGENT_CAPABILITIES.md** - This file (architecture & capabilities)
+- **OpenAI Agents SDK** - https://openai.github.io/openai-agents-python/
+- **OpenRouter API** - https://openrouter.ai/
+
+---
+
+**Last Updated**: April 26, 2026
+**Version**: 0.1.0
+**Status**: Active Development
+
 
