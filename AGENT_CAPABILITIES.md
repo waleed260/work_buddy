@@ -532,8 +532,6 @@ The test suite covers:
 
 - **README.md** - User guide and quick start
 - **AGENT_CAPABILITIES.md** - This file (architecture & capabilities)
-- **OpenAI Agents SDK** - https://openai.github.io/openai-agents-python/
-- **OpenRouter API** - https://openrouter.ai/
 
 ---
 
