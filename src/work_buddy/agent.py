@@ -94,12 +94,21 @@ class RemoteWorkBuddy:
         """Create the main Remote Work Buddy agent."""
         if not self.api_key:
             return None
-        
+
+        # Use OpenRouter provider
+        from .providers import create_model
+
+        model_obj = create_model(
+            api_key=self.api_key,
+            base_url=self.base_url,
+            model_name=self.model
+        )
+
         return Agent(
             name="RemoteWorkBuddy",
             instructions=self._get_system_instructions(),
             tools=self._get_agent_tools(),
-            model=self.model,
+            model=model_obj,
         )
     
     def _get_system_instructions(self) -> str:
@@ -232,11 +241,13 @@ When specialized help is needed:
     
     def get_daily_schedule(self) -> str:
         """Get today's schedule as a formatted table."""
-        return get_todays_schedule()
-    
+        from .tools import _get_todays_schedule
+        return _get_todays_schedule()
+
     def get_daily_standup(self) -> str:
         """Get daily standup summary."""
-        return get_daily_standup()
+        from .tools import _get_daily_standup
+        return _get_daily_standup()
     
     def suggest_schedule(self, priorities: list[str]) -> str:
         """
