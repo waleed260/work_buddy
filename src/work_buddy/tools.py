@@ -49,6 +49,9 @@ _breaks: list[dict] = []
 _habits: dict[str, list[str]] = {}
 _transcripts: list[dict] = []
 
+# Constants
+PRIORITY_MAP = {"high": 0, "medium": 1, "low": 2}
+
 
 # ============ Calendar Tools ============
 
@@ -94,6 +97,9 @@ def _get_todays_schedule() -> str:
     today = datetime.now().strftime("%Y-%m-%d")
     events = [e for e in _calendar_events if e.start_time.startswith(today)]
     
+    # Sort events chronologically by start time
+    events.sort(key=lambda x: x.start_time)
+
     if not events:
         return "📅 Your schedule is clear today!"
     
@@ -130,10 +136,13 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     """Get tasks as a formatted string."""
     global _tasks
     if completed is None:
-        filtered = _tasks
+        filtered = list(_tasks)
     else:
         filtered = [t for t in _tasks if t.completed == completed]
     
+    # Sort tasks by priority (high > medium > low)
+    filtered.sort(key=lambda x: PRIORITY_MAP.get(x.priority.lower(), 3))
+
     if not filtered:
         return "📋 No tasks found."
     
@@ -161,6 +170,10 @@ def _get_daily_standup() -> str:
     completed = [t for t in _tasks if t.completed]
     pending = [t for t in _tasks if not t.completed]
     
+    # Sort tasks by priority (high > medium > low)
+    completed.sort(key=lambda x: PRIORITY_MAP.get(x.priority.lower(), 3))
+    pending.sort(key=lambda x: PRIORITY_MAP.get(x.priority.lower(), 3))
+
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
