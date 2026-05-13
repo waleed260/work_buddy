@@ -100,7 +100,10 @@ def _get_todays_schedule() -> str:
     events = [e for e in _calendar_events if e.start_time.startswith(today)]
     
     if not events:
-        return "📅 Your schedule is clear today!"
+        return "📅 Your schedule is clear today! Enjoy the breathing room. ✨"
+
+    # Sort events chronologically
+    events.sort(key=lambda e: e.start_time)
     
     schedule = "📅 **Today's Schedule**\n\n"
     schedule += "| Time | Event |\n"
@@ -128,7 +131,8 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     global _tasks
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
-    return f"✅ Task added: '{title}' (Priority: {priority})"
+    emoji = PRIORITY_EMOJIS.get(priority, "⚪")
+    return f"✅ Task added: {emoji} '{title}'"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -141,7 +145,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     
     if not filtered:
         if completed is False:
-            return "📋 All caught up! No pending tasks."
+            return "📋 All caught up! No pending tasks. Time to celebrate! 🎉"
         return "📋 No tasks found."
     
     # Sort by priority
@@ -151,7 +155,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     for task in filtered:
         status = "✅" if task.completed else "🔄"
         emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        result += f"{status} {task.title} {emoji}\n"
+        result += f"{status} {emoji} {task.title}\n"
     
     return result
 
@@ -181,13 +185,13 @@ def _get_daily_standup() -> str:
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  (none) - You're all caught up! 🚀\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
             emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            standup += f"  🔄 {t.title} {emoji}\n"
+            standup += f"  🔄 {emoji} {t.title}\n"
 
     return standup
 
