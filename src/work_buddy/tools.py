@@ -40,6 +40,11 @@ class SlackMessage(BaseModel):
     message: str
 
 
+# UX Constants
+PRIORITY_EMOJIS = {"high": "🔴", "medium": "🟡", "low": "🔵"}
+PRIORITY_RANK = {"high": 0, "medium": 1, "low": 2}
+
+
 # Shared state for tools
 _calendar_events: list[CalendarEvent] = []
 _email_drafts: list[EmailDraft] = []
@@ -135,12 +140,18 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
         filtered = [t for t in _tasks if t.completed == completed]
     
     if not filtered:
+        if completed is False:
+            return "📋 All caught up! No pending tasks."
         return "📋 No tasks found."
     
+    # Sort by priority
+    filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
+
     result = "📋 **Tasks**\n\n"
     for task in filtered:
         status = "✅" if task.completed else "🔄"
-        result += f"{status} {task.title} ({task.priority})\n"
+        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+        result += f"{status} {task.title} {emoji}\n"
     
     return result
 
@@ -167,11 +178,17 @@ def _get_daily_standup() -> str:
         standup += f"  ✅ {t.title}\n"
     if not completed:
         standup += "  (none yet)\n"
+
     standup += "\n**In Progress:**\n"
-    for t in pending[:5]:
-        standup += f"  🔄 {t.title} ({t.priority})\n"
     if not pending:
         standup += "  (none)\n"
+    else:
+        # Sort pending by priority
+        pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
+        for t in pending[:5]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            standup += f"  🔄 {t.title} {emoji}\n"
+
     return standup
 
 
