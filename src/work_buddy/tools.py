@@ -100,7 +100,10 @@ def _get_todays_schedule() -> str:
     events = [e for e in _calendar_events if e.start_time.startswith(today)]
     
     if not events:
-        return "📅 Your schedule is clear today!"
+        return "📅 Your schedule is clear! Enjoy the extra space. ✨"
+
+    # Sort chronologically
+    events.sort(key=lambda e: e.start_time)
     
     schedule = "📅 **Today's Schedule**\n\n"
     schedule += "| Time | Event |\n"
@@ -141,8 +144,8 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     
     if not filtered:
         if completed is False:
-            return "📋 All caught up! No pending tasks."
-        return "📋 No tasks found."
+            return "📋 All caught up! No pending tasks. Time to celebrate! 🎉"
+        return "📋 No tasks found. ✨"
     
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -151,7 +154,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     for task in filtered:
         status = "✅" if task.completed else "🔄"
         emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        result += f"{status} {task.title} {emoji}\n"
+        result += f"{status} {emoji} {task.title}\n"
     
     return result
 
@@ -181,13 +184,13 @@ def _get_daily_standup() -> str:
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  (none) 🚀\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
             emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            standup += f"  🔄 {t.title} {emoji}\n"
+            standup += f"  🔄 {emoji} {t.title}\n"
 
     return standup
 
@@ -213,7 +216,7 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "📧 No email drafts yet. All quiet on the inbox front! 🚀"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
@@ -240,7 +243,7 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "💬 No Slack messages drafted. Your outgoing messages are clear! ✨"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
@@ -343,7 +346,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✅ No action items found. Everything is under control! 🚀"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
