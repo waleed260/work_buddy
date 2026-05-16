@@ -98,9 +98,10 @@ def _get_todays_schedule() -> str:
     global _calendar_events
     today = datetime.now().strftime("%Y-%m-%d")
     events = [e for e in _calendar_events if e.start_time.startswith(today)]
+    events.sort(key=lambda e: e.start_time)
     
     if not events:
-        return "📅 Your schedule is clear today!"
+        return "✨ Your schedule is clear today! 🥳"
     
     schedule = "📅 **Today's Schedule**\n\n"
     schedule += "| Time | Event |\n"
@@ -141,8 +142,8 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     
     if not filtered:
         if completed is False:
-            return "📋 All caught up! No pending tasks."
-        return "📋 No tasks found."
+            return "✨ All caught up! No pending tasks. 🚀"
+        return "📋 No tasks found. 🥳"
     
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -151,7 +152,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     for task in filtered:
         status = "✅" if task.completed else "🔄"
         emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        result += f"{status} {task.title} {emoji}\n"
+        result += f"{status} {emoji} {task.title}\n"
     
     return result
 
@@ -187,7 +188,7 @@ def _get_daily_standup() -> str:
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
             emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            standup += f"  🔄 {t.title} {emoji}\n"
+            standup += f"  🔄 {emoji} {t.title}\n"
 
     return standup
 
