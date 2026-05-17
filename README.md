@@ -190,38 +190,4 @@ python -c "from work_buddy.test_agent import main; main()"
 # ✅ Meeting transcription
 ```
 
-## 📝 Example Output
-
-### Daily Standup
-```
-📋 **Daily Standup**
-
-**Completed:**
-  ✅ Finished quarterly report
-
-**In Progress:**
-  🔄 Complete project documentation (high)
-  🔄 Review pull requests (medium)
-  🔄 Update team wiki (low)
-```
-
-### Wellness Insights
-```
-📊 **Weekly Wellness Insights**
-
-• Breaks taken: 15
-• Average break duration: 8.5 minutes
-✅ Great job maintaining regular breaks!
-```
-### Schedule Table
-```
-📅 **Today's Schedule**
-
-| Time | Event |
-|------|-------|
-| 10:00 - 10:30 | Team Standup |
-| 14:00 - 16:00 | Deep Work Session |
-```
-
- 🚀
 
