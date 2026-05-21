@@ -175,14 +175,15 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ No tasks completed yet. Let's get started! 🚀\n"
+    else:
+        for t in completed[-5:]:
+            standup += f"  ✅ {t.title}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All caught up! No pending tasks. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -214,11 +215,11 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "✨ No email drafts. Time to reach out? 📧"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n\n"
     return result
 
 
@@ -241,11 +242,11 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "✨ No Slack messages drafted. Stay connected! 💬"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {msg.message[:50]}...\n"
     return result
 
 
@@ -344,7 +345,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found. Clear skies! 🌊"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
