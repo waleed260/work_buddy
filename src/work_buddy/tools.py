@@ -178,11 +178,11 @@ def _get_daily_standup() -> str:
     for t in completed[-5:]:
         standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ No tasks completed yet. Let's get started! 🚀\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All caught up! No tasks in progress. 🌊\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -214,11 +214,11 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "✨ No email drafts. Your inbox is clean! 🌊"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n\n"
     return result
 
 
@@ -241,11 +241,11 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "✨ No Slack messages drafted. All clear! 🥷"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {msg.message[:50]}...\n\n"
     return result
 
 
@@ -282,8 +282,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"• **Breaks taken:** {total_breaks}\n"
+    insights += f"• **Average break duration:** {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -344,7 +344,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found. Time to relax! ☕"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
