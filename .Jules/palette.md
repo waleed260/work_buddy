@@ -5,3 +5,7 @@
 ## 2026-05-17 - Scanning Efficiency and Encouraging Empty States
 **Learning:** Placing priority markers immediately after status indicators (e.g., `🔄 🔴 Title`) creates a tighter anchor for the eye, allowing users to scan both completion status and urgency in a single vertical pass. Additionally, using "delightful" empty states (emojis like 🥳, 🚀) transforms a "no results" dead-end into a moment of positive reinforcement, which is critical for a productivity-focused agent.
 **Action:** When displaying lists, group meta-information (status, priority) before the content. Always enhance empty states with encouraging language and positive emojis.
+
+## 2026-05-26 - Visual Anchors for Scannability
+**Learning:** In text-heavy CLI outputs, using bold Markdown for property labels (e.g., **To:**, **Subject:**) creates clear visual anchors. This helps users quickly parse information without reading every word, which is especially useful when skimming lists of drafts or action items.
+**Action:** Always use bold formatting for key-value labels in list-based CLI outputs.
