@@ -178,11 +178,11 @@ def _get_daily_standup() -> str:
     for t in completed[-5:]:
         standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ Nothing finished yet—the day is young! 🚀\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  🌊 All clear! Ready for your next big challenge? 🥷\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -214,11 +214,11 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "📧 No email drafts yet. Your inbox is waiting for your magic! ✨"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n\n"
     return result
 
 
@@ -241,11 +241,13 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "💬 No Slack messages drafted. Silence is golden! 🌊"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        # Indent multi-line messages for better readability
+        indented_message = msg.message.replace("\n", "\n  ")
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {indented_message}\n\n"
     return result
 
 
