@@ -175,14 +175,15 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ No tasks completed yet today. Let's get started! 🚀\n"
+    else:
+        for t in completed[-5:]:
+            standup += f"  ✅ {t.title}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No pending tasks. 🌊\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -214,11 +215,16 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "📧 Your draft folder is empty. ✨"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        body_snippet = draft.body[:100].replace('\n', '\n  ')
+        if len(draft.body) > 100:
+            body_snippet += "..."
+        result += f"• **To:** {draft.to}\n"
+        result += f"  **Subject:** {draft.subject}\n"
+        result += f"  **Body:** {body_snippet}\n\n"
     return result
 
 
@@ -241,11 +247,13 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "💬 No Slack messages drafted. ✨"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        indented_message = msg.message.replace('\n', '\n  ')
+        result += f"• **Channel:** #{msg.channel}\n"
+        result += f"  **Message:** {indented_message}\n\n"
     return result
 
 
