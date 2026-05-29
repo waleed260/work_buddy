@@ -214,11 +214,11 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "✨ No email drafts. You're all caught up! 🌊"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n  **Body:** {draft.body[:100]}...\n\n"
     return result
 
 
@@ -241,11 +241,13 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "✨ No Slack messages drafted. 🌊"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        # Indent multi-line messages for better scannability
+        formatted_message = msg.message.replace('\n', '\n  ')
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {formatted_message}\n\n"
     return result
 
 
