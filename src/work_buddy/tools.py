@@ -218,7 +218,9 @@ def _get_email_drafts() -> str:
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        snippet = draft.body[:100] + ("..." if len(draft.body) > 100 else "")
+        snippet = snippet.replace('\n', '\n  ')
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n  **Body:** {snippet}\n\n"
     return result
 
 
@@ -245,7 +247,8 @@ def _get_slack_messages() -> str:
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        formatted_msg = msg.message.replace('\n', '\n  ')
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {formatted_msg}\n\n"
     return result
 
 
