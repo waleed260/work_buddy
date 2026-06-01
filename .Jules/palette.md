@@ -5,3 +5,7 @@
 ## 2026-05-17 - Scanning Efficiency and Encouraging Empty States
 **Learning:** Placing priority markers immediately after status indicators (e.g., `🔄 🔴 Title`) creates a tighter anchor for the eye, allowing users to scan both completion status and urgency in a single vertical pass. Additionally, using "delightful" empty states (emojis like 🥳, 🚀) transforms a "no results" dead-end into a moment of positive reinforcement, which is critical for a productivity-focused agent.
 **Action:** When displaying lists, group meta-information (status, priority) before the content. Always enhance empty states with encouraging language and positive emojis.
+
+## 2026-06-02 - Enhancing Scannability of Multi-line List Items
+**Learning:** For list-based data that includes multi-line text (like message bodies), using bold labels for properties and consistent two-space indentation for subsequent lines significantly improves scannability and visual anchoring. This prevents the content from bleeding into the next list item and maintains a clean vertical flow.
+**Action:** When displaying list items with varying lengths and multi-line content, always use bold Markdown for labels and indent the content to align with the start of the text in the first line.
