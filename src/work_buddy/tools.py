@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -178,11 +178,11 @@ def _get_daily_standup() -> str:
     for t in completed[-5:]:
         standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You haven't completed any tasks yet. Let's get started! 🚀\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ No tasks in progress. Ready to pick up something new? 🌊\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -214,11 +214,13 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
-    
+        return "📧 No email drafts. ✨ 🚀"
+
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        snippet = draft.body[:100] + "..." if len(draft.body) > 100 else draft.body
+        snippet = snippet.replace("\n", "\n  ")
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n  **Body:** {snippet}\n\n"
     return result
 
 
@@ -241,11 +243,12 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
-    
+        return "💬 No Slack messages drafted. ✨ 🚀"
+
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        message_display = msg.message.replace("\n", "\n  ")
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {message_display}\n"
     return result
 
 
