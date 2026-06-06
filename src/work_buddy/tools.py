@@ -129,7 +129,8 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     global _tasks
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
-    return f"✅ Task added: '{title}' (Priority: {priority})"
+    emoji = PRIORITY_EMOJIS.get(priority, "⚪")
+    return f"✅ Task added: {emoji} '{title}'"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -152,7 +153,8 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     for task in filtered:
         status = "✅" if task.completed else "🔄"
         emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        result += f"{status} {emoji} {task.title}\n"
+        due = f" (Due: {task.due_date})" if task.due_date else ""
+        result += f"{status} {emoji} {task.title}{due}\n"
     
     return result
 
@@ -188,7 +190,8 @@ def _get_daily_standup() -> str:
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
             emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            standup += f"  🔄 {emoji} {t.title}\n"
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  🔄 {emoji} {t.title}{due}\n"
 
     return standup
 
@@ -214,11 +217,14 @@ def _get_email_drafts() -> str:
     """Get all email drafts."""
     global _email_drafts
     if not _email_drafts:
-        return "📧 No email drafts."
+        return "📧 ✨ No email drafts yet. All quiet in the inbox! 🌊"
     
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        result += f"• To: {draft.to}\n  Subject: {draft.subject}\n\n"
+        snippet = draft.body[:100].replace('\n', '\n  ')
+        if len(draft.body) > 100:
+            snippet += "..."
+        result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n  **Body:** {snippet}\n\n"
     return result
 
 
@@ -241,11 +247,12 @@ def _get_slack_messages() -> str:
     """Get all drafted Slack messages."""
     global _slack_messages
     if not _slack_messages:
-        return "💬 No Slack messages drafted."
+        return "💬 ✨ No Slack messages drafted. Team's all caught up! 🥳"
     
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        result += f"• #{msg.channel}: {msg.message[:50]}...\n"
+        formatted_msg = msg.message.replace('\n', '\n  ')
+        result += f"• **Channel:** #{msg.channel}\n  **Message:** {formatted_msg}\n\n"
     return result
 
 
