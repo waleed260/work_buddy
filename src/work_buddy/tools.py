@@ -74,7 +74,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ 📅 Event '{title}' scheduled from {start_time} to {end_time}"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -165,7 +165,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Nice work! Marked '{title}' as completed 🥳"
     return f"Task '{title}' not found"
 
 
@@ -178,13 +178,14 @@ def _get_daily_standup() -> str:
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
+        emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+        standup += f"  ✅ {emoji} {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ No tasks completed yet today. Let's get started! 🚀\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  🥳 All caught up! No tasks in progress. 🌊\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -293,9 +294,9 @@ def _get_weekly_insights() -> str:
     insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
-        insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
+        insights += "💡 Tip: Try to take more frequent breaks for better productivity. 🧘\n"
     else:
-        insights += "✅ Great job maintaining regular breaks!\n"
+        insights += "✅ Great job maintaining regular breaks! 🥳\n"
     
     return insights
 
@@ -351,7 +352,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found. It looks like everything is clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
