@@ -74,7 +74,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Got it! Event '{title}' scheduled from {start_time} to {end_time} 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -130,7 +130,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Noted! Task added: {emoji} '{title}' 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -165,7 +165,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Nice work! Marked '{title}' as completed 🥳"
     return f"Task '{title}' not found"
 
 
@@ -180,11 +180,11 @@ def _get_daily_standup() -> str:
     for t in completed[-5:]:
         standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ Nothing to report yet! 🚀\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear for now! 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -279,7 +279,7 @@ def _log_break(break_type: str, duration_minutes: int) -> str:
         "timestamp": datetime.now().isoformat()
     }
     _breaks.append(entry)
-    return f"✅ Logged {break_type} break for {duration_minutes} minutes"
+    return f"✅ Enjoy your break! Logged {break_type} break for {duration_minutes} minutes 🧘"
 
 
 def _get_weekly_insights() -> str:
@@ -306,7 +306,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Keep it up! Tracked habit '{habit_name}': {status} 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
@@ -351,7 +351,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ All clear! No action items found. 🚀"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
