@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-12 - Micro-delight and Visual Consistency in Tool Feedback
+**Learning:** Tool confirmations in an AI agent should do more than just state success; adding context-aware reinforcement phrases (e.g., "Nice work!" for task completion) builds a sense of partnership. Furthermore, maintaining identical visual structures (e.g., status, priority, title, due date) across different list categories (Completed vs. In Progress) reduces cognitive load by allowing the user to reuse the same scanning pattern.
+**Action:** Append delightful reinforcement phrases to tool confirmations and ensure consistent metadata formatting across all task-related list views.
