@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -74,7 +74,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}. Got it! 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -130,7 +130,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -165,7 +165,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Task completed: '{title}'. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
@@ -177,14 +177,17 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🚀\n"
+    else:
+        for t in completed[-5:]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  ✅ {emoji} {t.title}{due}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -279,7 +282,7 @@ def _log_break(break_type: str, duration_minutes: int) -> str:
         "timestamp": datetime.now().isoformat()
     }
     _breaks.append(entry)
-    return f"✅ Logged {break_type} break for {duration_minutes} minutes"
+    return f"✅ Logged {break_type} break for {duration_minutes} minutes. Enjoy your break! 🧘"
 
 
 def _get_weekly_insights() -> str:
@@ -306,7 +309,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Tracked habit '{habit_name}': {status}. Keep it up! 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
@@ -351,7 +354,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ All clear! No action items found in this meeting. 🚀"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
