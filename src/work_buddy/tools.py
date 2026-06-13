@@ -174,17 +174,20 @@ def _get_daily_standup() -> str:
     global _tasks
     completed = [t for t in _tasks if t.completed]
     pending = [t for t in _tasks if not t.completed]
-    
+
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🚀\n"
+    else:
+        for t in completed[-5:]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  ✅ {emoji} {t.title}{due}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
