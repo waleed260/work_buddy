@@ -97,7 +97,7 @@ async def test_remote_work_buddy():
         add_task("Update team wiki", "low")
         
         standup = get_daily_standup()
-        print(f"\n📋 Daily Standup:\n{standup}")
+        print(f"\n{standup}")
     except Exception as e:
         print(f"❌ Error in Test 3: {e}")
     
@@ -173,7 +173,7 @@ async def test_remote_work_buddy():
             subject="Project Update - Weekly Status",
             body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
         )
-        print(f"\n✅ {result}")
+        print(f"\n{result}")
     except Exception as e:
         print(f"❌ Error in Test 7: {e}")
     
@@ -235,7 +235,7 @@ def run_mock_tests():
     add_task("Update team wiki", "low")
     
     standup = get_daily_standup()
-    print(f"\n📋 Daily Standup:\n{standup}")
+    print(f"\n{standup}")
     
     # Test Calendar
     print("\n" + "=" * 60)
@@ -290,7 +290,7 @@ def run_mock_tests():
         subject="Project Update - Weekly Status",
         body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
     )
-    print(f"\n✅ {result}")
+    print(f"\n{result}")
     
     # Test Transcription
     print("\n" + "=" * 60)
