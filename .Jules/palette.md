@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-17 - Encouraging Empty States in Productivity Tools
+**Learning:** In a productivity-focused agent, "empty" or "zero" states (like no tasks completed or no pending work) are often perceived as moments of friction or boredom. By replacing technical placeholders like "(none)" with encouraging, human-centric micro-copy and micro-delight emojis, we transform a neutral state into a positive reinforcement loop. This reduces the cognitive feeling of "having nothing to do" and instead highlights the achievement or the clean slate.
+**Action:** Always audit list-based tools for technical empty state placeholders and replace them with contextually encouraging messages (e.g., "You're just getting started!" for new sessions, "All clear!" for completed workloads).
