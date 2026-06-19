@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-20 - Internal Consistency in Multi-section Reports
+**Learning:** When a report (like the Daily Standup) contains multiple sections (e.g., "Completed" vs. "In Progress"), failing to maintain identical metadata formatting (like priority emojis and due dates) across sections forces the user to switch mental context. Uniformity allows the user's brain to process the entire report using a single parsing rule, significantly reducing cognitive load.
+**Action:** Ensure that all list sections within a single view share the exact same metadata schema and visual ordering.
