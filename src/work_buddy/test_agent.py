@@ -173,7 +173,7 @@ async def test_remote_work_buddy():
             subject="Project Update - Weekly Status",
             body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
         )
-        print(f"\n✅ {result}")
+        print(f"\n{result}")
     except Exception as e:
         print(f"❌ Error in Test 7: {e}")
     
@@ -290,7 +290,7 @@ def run_mock_tests():
         subject="Project Update - Weekly Status",
         body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
     )
-    print(f"\n✅ {result}")
+    print(f"\n{result}")
     
     # Test Transcription
     print("\n" + "=" * 60)

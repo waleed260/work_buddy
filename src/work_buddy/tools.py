@@ -74,7 +74,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Event added: '{title}' ({start_time} to {end_time}). Got it! 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -130,7 +130,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -165,7 +165,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Task completed: '{title}'. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
@@ -177,14 +177,17 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🚀\n"
+    else:
+        for t in completed[-5:]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  ✅ {emoji} {t.title}{due}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -289,8 +292,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"• 🧘 Breaks taken: {total_breaks}\n"
+    insights += f"• ⏱️ Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -351,7 +354,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
