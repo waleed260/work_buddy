@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-23 - Consistency in Reinforcement Loops
+**Learning:** UX consistency isn't just about layout; it's about the emotional feedback loop. Providing detailed metadata (priority, due date) in "Completed" sections of standups—not just "In Progress"—reinforces the value of the user's effort and maintains a predictable scanning pattern. Coupling this with varied reinforcement phrases like "Nice work! 🥳" creates a balanced feedback loop that is both precise and delightful.
+**Action:** Ensure that summary views (like standups) maintain identical data density for both active and completed states. Always append reinforcement phrases to successful tool confirmations to celebrate user progress.
