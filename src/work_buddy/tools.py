@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -177,14 +177,17 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🚀\n"
+    else:
+        for t in completed[-5:]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  ✅ {emoji} {t.title}{due}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -289,8 +292,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"🧘 Breaks taken: {total_breaks}\n"
+    insights += f"⏱️ Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -351,7 +354,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
