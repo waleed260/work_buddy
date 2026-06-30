@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-07-01 - Informational Parity and Micro-copy Delight
+**Learning:** In productivity tools, "Informational Parity" between active and completed states is crucial for closure. Removing metadata (like priority or due dates) from completed tasks can strip away the context of the achievement. Additionally, transforming technical empty states into encouraging micro-copy reinforces positive behavior loops.
+**Action:** Maintain task metadata (priority, dates) even in completed views to preserve context. Use human-centric, encouraging language for empty states instead of technical placeholders like "(none)".
