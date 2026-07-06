@@ -124,6 +124,14 @@ get_todays_schedule = function_tool(_get_todays_schedule)
 
 # ============ Task Management Tools ============
 
+def _format_task_line(task: Task, indent: str = "") -> str:
+    """Helper to format a task line consistently."""
+    status = "✅" if task.completed else "🔄"
+    emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+    due = f" (Due: {task.due_date})" if task.due_date else ""
+    return f"{indent}{status} {emoji} {task.title}{due}"
+
+
 def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = None) -> str:
     """Add a new task. Returns confirmation."""
     global _tasks
@@ -144,17 +152,14 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     if not filtered:
         if completed is False:
             return "✨ All caught up! No pending tasks. 🚀"
-        return "📋 No tasks found. 🥳"
+        return "✨ No tasks found. You're all clear! 🥳"
     
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
 
     result = "📋 **Tasks**\n\n"
     for task in filtered:
-        status = "✅" if task.completed else "🔄"
-        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        due = f" (Due: {task.due_date})" if task.due_date else ""
-        result += f"{status} {emoji} {task.title}{due}\n"
+        result += f"{_format_task_line(task)}\n"
     
     return result
 
@@ -177,21 +182,20 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🚀\n"
+    else:
+        for t in completed[-5:]:
+            standup += f"{_format_task_line(t, indent='  ')}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
-            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            due = f" (Due: {t.due_date})" if t.due_date else ""
-            standup += f"  🔄 {emoji} {t.title}{due}\n"
+            standup += f"{_format_task_line(t, indent='  ')}\n"
 
     return standup
 
@@ -289,13 +293,13 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"🧘 Breaks taken: {total_breaks}\n"
+    insights += f"🕒 Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
-        insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
+        insights += "💡 Tip: Try to take more frequent breaks for better productivity. 🚀\n"
     else:
-        insights += "✅ Great job maintaining regular breaks!\n"
+        insights += "✅ Great job maintaining regular breaks! 🥳\n"
     
     return insights
 
@@ -351,7 +355,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
