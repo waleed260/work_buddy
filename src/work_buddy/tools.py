@@ -45,6 +45,14 @@ PRIORITY_EMOJIS = {"high": "🔴", "medium": "🟡", "low": "🔵"}
 PRIORITY_RANK = {"high": 0, "medium": 1, "low": 2}
 
 
+def _format_task_line(task: Task, indent: str = "") -> str:
+    """Standardize task output formatting."""
+    status = "✅" if task.completed else "🔄"
+    emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+    due = f" (Due: {task.due_date})" if task.due_date else ""
+    return f"{indent}{status} {emoji} {task.title}{due}\n"
+
+
 # Shared state for tools
 _calendar_events: list[CalendarEvent] = []
 _email_drafts: list[EmailDraft] = []
@@ -130,7 +138,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -151,10 +159,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
 
     result = "📋 **Tasks**\n\n"
     for task in filtered:
-        status = "✅" if task.completed else "🔄"
-        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        due = f" (Due: {task.due_date})" if task.due_date else ""
-        result += f"{status} {emoji} {task.title}{due}\n"
+        result += _format_task_line(task)
     
     return result
 
@@ -165,8 +170,8 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
-    return f"Task '{title}' not found"
+            return f"✅ Marked '{title}' as completed. Nice work! 🥳"
+    return f"❌ Task '{title}' not found."
 
 
 def _get_daily_standup() -> str:
@@ -177,21 +182,20 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🥳\n"
+    else:
+        for t in completed[-5:]:
+            standup += _format_task_line(t, indent="  ")
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
-            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            due = f" (Due: {t.due_date})" if t.due_date else ""
-            standup += f"  🔄 {emoji} {t.title}{due}\n"
+            standup += _format_task_line(t, indent="  ")
 
     return standup
 
@@ -289,8 +293,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"• 🧘 Breaks taken: {total_breaks}\n"
+    insights += f"• 🕒 Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -306,7 +310,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Tracked habit '{habit_name}': {status}. Keep it up! 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
@@ -351,7 +355,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
