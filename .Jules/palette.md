@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-07-13 - Informational Parity and Component Reusability
+**Learning:** Standardizing visual components through helper functions ensures that metadata (like priority emojis and due dates) is preserved across all views. This "informational parity" provides better closure when tasks transition between states (e.g., from In Progress to Completed) and maintains a consistent cognitive load for the user across different summary interfaces.
+**Action:** Centralize formatting logic for complex entities into reusable helper functions to maintain UI consistency and metadata visibility across all related views.
