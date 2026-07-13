@@ -55,6 +55,14 @@ _habits: dict[str, list[str]] = {}
 _transcripts: list[dict] = []
 
 
+def _format_task_line(task: Task, indent: str = "") -> str:
+    """Standardize task output for CLI views."""
+    status = "✅" if task.completed else "🔄"
+    emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+    due = f" (Due: {task.due_date})" if task.due_date else ""
+    return f"{indent}{status} {emoji} {task.title}{due}\n"
+
+
 # ============ Calendar Tools ============
 
 def _check_calendar_events(date: str) -> list[str]:
@@ -74,7 +82,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}. Got it! 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -130,7 +138,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -143,18 +151,15 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     
     if not filtered:
         if completed is False:
-            return "✨ All caught up! No pending tasks. 🚀"
-        return "📋 No tasks found. 🥳"
+            return "✨ All clear! No tasks in progress. 🥳"
+        return "✨ No tasks found. You're all clear! 🥳"
     
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
 
     result = "📋 **Tasks**\n\n"
     for task in filtered:
-        status = "✅" if task.completed else "🔄"
-        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        due = f" (Due: {task.due_date})" if task.due_date else ""
-        result += f"{status} {emoji} {task.title}{due}\n"
+        result += _format_task_line(task)
     
     return result
 
@@ -165,7 +170,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Marked '{title}' as completed. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
@@ -178,9 +183,9 @@ def _get_daily_standup() -> str:
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
+        standup += _format_task_line(t, indent="  ")
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🥳\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
@@ -189,9 +194,7 @@ def _get_daily_standup() -> str:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
-            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            due = f" (Due: {t.due_date})" if t.due_date else ""
-            standup += f"  🔄 {emoji} {t.title}{due}\n"
+            standup += _format_task_line(t, indent="  ")
 
     return standup
 
@@ -210,7 +213,7 @@ def _draft_email(to: str, subject: str, body: str) -> str:
     global _email_drafts
     draft = EmailDraft(to=to, subject=subject, body=body)
     _email_drafts.append(draft)
-    return f"✅ Email drafted to {to}: '{subject}'"
+    return f"✅ Email drafted to {to}: '{subject}'. Got it! 📧"
 
 
 def _get_email_drafts() -> str:
@@ -240,7 +243,7 @@ def _draft_slack_message(channel: str, message: str) -> str:
     global _slack_messages
     msg = SlackMessage(channel=channel, message=message)
     _slack_messages.append(msg)
-    return f"✅ Slack message drafted for #{channel}"
+    return f"✅ Slack message drafted for #{channel}. Noted! 💬"
 
 
 def _get_slack_messages() -> str:
@@ -279,7 +282,7 @@ def _log_break(break_type: str, duration_minutes: int) -> str:
         "timestamp": datetime.now().isoformat()
     }
     _breaks.append(entry)
-    return f"✅ Logged {break_type} break for {duration_minutes} minutes"
+    return f"✅ Logged {break_type} break for {duration_minutes} minutes. Relax and recharge! 🧘"
 
 
 def _get_weekly_insights() -> str:
@@ -289,8 +292,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"• 🧘 Breaks taken: {total_breaks}\n"
+    insights += f"• 🕒 Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -306,7 +309,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Tracked habit '{habit_name}': {status}. Keep it up! 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
@@ -351,7 +354,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
