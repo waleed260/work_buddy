@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-07-18 - Balanced Confirmation Feedback Loop
+**Learning:** In terminal and chat interfaces, purely mechanical success messages (e.g. "Marked task as completed") lack emotional reward, while purely decorative messages can feel overly verbose. A balanced confirmation feedback loop combines factual precision (echoing key actions or details) with a distinct and warm reinforcement phrase and contextual emoji. This provides immediate cognitive closure while transforming routine interactions into micro-moments of delight.
+**Action:** Append delightful reinforcement phrases and emojis to command success messages (e.g. "Nice work! 🥳" for task completion) while clearly echoing the action's key details.
