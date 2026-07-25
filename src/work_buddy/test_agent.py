@@ -40,7 +40,7 @@ async def test_remote_work_buddy():
     base_url = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com")
     tracing_enabled = os.getenv("TRACING_ENABLED", "false").lower() == "true"
     
-    print(f"\n📍 Timezone: Asia/Karachi (PKT)")
+    print("\n📍 Timezone: Asia/Karachi (PKT)")
     print(f"🔑 API Key: {'Set' if api_key else 'Not set (using mock mode)'}")
     print(f"🌐 Base URL: {base_url}")
     print(f"📊 Tracing: {'Enabled' if tracing_enabled else 'Disabled'}")
@@ -173,7 +173,7 @@ async def test_remote_work_buddy():
             subject="Project Update - Weekly Status",
             body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
         )
-        print(f"\n✅ {result}")
+        print(f"\n{result}")
     except Exception as e:
         print(f"❌ Error in Test 7: {e}")
     
@@ -290,7 +290,7 @@ def run_mock_tests():
         subject="Project Update - Weekly Status",
         body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
     )
-    print(f"\n✅ {result}")
+    print(f"\n{result}")
     
     # Test Transcription
     print("\n" + "=" * 60)
