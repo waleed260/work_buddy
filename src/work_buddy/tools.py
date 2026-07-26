@@ -74,7 +74,7 @@ def _add_calendar_event(title: str, start_time: str, end_time: str, description:
         description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}. Got it! 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
@@ -130,7 +130,7 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -165,7 +165,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Marked '{title}' as completed. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
@@ -210,7 +210,7 @@ def _draft_email(to: str, subject: str, body: str) -> str:
     global _email_drafts
     draft = EmailDraft(to=to, subject=subject, body=body)
     _email_drafts.append(draft)
-    return f"✅ Email drafted to {to}: '{subject}'"
+    return f"✅ Email drafted to {to}: '{subject}'. Got it! ✉️"
 
 
 def _get_email_drafts() -> str:
@@ -240,7 +240,7 @@ def _draft_slack_message(channel: str, message: str) -> str:
     global _slack_messages
     msg = SlackMessage(channel=channel, message=message)
     _slack_messages.append(msg)
-    return f"✅ Slack message drafted for #{channel}"
+    return f"✅ Slack message drafted for #{channel}. Noted! 💬"
 
 
 def _get_slack_messages() -> str:
@@ -279,7 +279,7 @@ def _log_break(break_type: str, duration_minutes: int) -> str:
         "timestamp": datetime.now().isoformat()
     }
     _breaks.append(entry)
-    return f"✅ Logged {break_type} break for {duration_minutes} minutes"
+    return f"✅ Logged {break_type} break for {duration_minutes} minutes. Relax and recharge! 🧘"
 
 
 def _get_weekly_insights() -> str:
@@ -289,8 +289,8 @@ def _get_weekly_insights() -> str:
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
     
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
+    insights += f"• 🧘 Breaks taken: {total_breaks}\n"
+    insights += f"• ⏰ Average break duration: {avg_break_duration:.1f} minutes\n"
     
     if total_breaks < 10:
         insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
@@ -306,7 +306,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Tracked habit '{habit_name}': {status}. Keep it up! 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
