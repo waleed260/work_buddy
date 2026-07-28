@@ -10,10 +10,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from work_buddy.agent import RemoteWorkBuddy, create_remote_work_buddy
+from work_buddy.agent import RemoteWorkBuddy
 from work_buddy.tools import (
     _add_task as add_task,
-    _get_tasks as get_tasks,
     _get_daily_standup as get_daily_standup,
     _add_calendar_event as add_calendar_event,
     _get_todays_schedule as get_todays_schedule,
@@ -40,7 +39,7 @@ async def test_remote_work_buddy():
     base_url = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com")
     tracing_enabled = os.getenv("TRACING_ENABLED", "false").lower() == "true"
     
-    print(f"\n📍 Timezone: Asia/Karachi (PKT)")
+    print("\n📍 Timezone: Asia/Karachi (PKT)")
     print(f"🔑 API Key: {'Set' if api_key else 'Not set (using mock mode)'}")
     print(f"🌐 Base URL: {base_url}")
     print(f"📊 Tracing: {'Enabled' if tracing_enabled else 'Disabled'}")
@@ -173,7 +172,7 @@ async def test_remote_work_buddy():
             subject="Project Update - Weekly Status",
             body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
         )
-        print(f"\n✅ {result}")
+        print(f"\n{result}")
     except Exception as e:
         print(f"❌ Error in Test 7: {e}")
     
@@ -290,7 +289,7 @@ def run_mock_tests():
         subject="Project Update - Weekly Status",
         body="Hi Team,\n\nHere's the weekly project status update...\n\nBest regards"
     )
-    print(f"\n✅ {result}")
+    print(f"\n{result}")
     
     # Test Transcription
     print("\n" + "=" * 60)
