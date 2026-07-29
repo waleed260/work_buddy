@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-25 - Balanced Feedback Loop for Tool Confirmations
+**Learning:** Appending a brief, pleasant reinforcement phrase and contextual emoji to raw technical action confirmations makes the CLI interaction feel conversational, rewarding, and encouraging for a remote worker. Ensuring integration tests do not duplicate these feedback markers is crucial for maintaining CLI visual hygiene.
+**Action:** Always format tool confirmations using the template `✅ [Action] [Detail]. [Reinforcement Phrase] [Emoji]` and ensure client-side tests do not double-print checkmarks.
