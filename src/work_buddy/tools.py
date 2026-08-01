@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -133,6 +133,14 @@ def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = No
     return f"✅ Task added: {emoji} '{title}'"
 
 
+def _format_task_line(task: Task, indent: str = "") -> str:
+    """Helper to format a single task line standardizing visual hierarchy."""
+    status = "✅" if task.completed else "🔄"
+    emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+    due = f" (Due: {task.due_date})" if task.due_date else ""
+    return f"{indent}{status} {emoji} {task.title}{due}\n"
+
+
 def _get_tasks(completed: Optional[bool] = None) -> str:
     """Get tasks as a formatted string."""
     global _tasks
@@ -151,10 +159,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
 
     result = "📋 **Tasks**\n\n"
     for task in filtered:
-        status = "✅" if task.completed else "🔄"
-        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        due = f" (Due: {task.due_date})" if task.due_date else ""
-        result += f"{status} {emoji} {task.title}{due}\n"
+        result += _format_task_line(task)
     
     return result
 
@@ -178,7 +183,7 @@ def _get_daily_standup() -> str:
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
+        standup += _format_task_line(t, indent="  ")
     if not completed:
         standup += "  (none yet)\n"
 
@@ -189,9 +194,7 @@ def _get_daily_standup() -> str:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
-            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            due = f" (Due: {t.due_date})" if t.due_date else ""
-            standup += f"  🔄 {emoji} {t.title}{due}\n"
+            standup += _format_task_line(t, indent="  ")
 
     return standup
 
