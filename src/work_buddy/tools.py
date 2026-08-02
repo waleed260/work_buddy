@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -12,6 +12,7 @@ from agents.tool import function_tool
 
 class CalendarEvent(BaseModel):
     """Represents a calendar event."""
+
     title: str
     start_time: str
     end_time: str
@@ -21,6 +22,7 @@ class CalendarEvent(BaseModel):
 
 class Task(BaseModel):
     """Represents a task."""
+
     title: str
     priority: str = "medium"
     due_date: Optional[str] = None
@@ -29,6 +31,7 @@ class Task(BaseModel):
 
 class EmailDraft(BaseModel):
     """Represents an email draft."""
+
     to: str
     subject: str
     body: str
@@ -36,6 +39,7 @@ class EmailDraft(BaseModel):
 
 class SlackMessage(BaseModel):
     """Represents a Slack message draft."""
+
     channel: str
     message: str
 
@@ -43,6 +47,14 @@ class SlackMessage(BaseModel):
 # UX Constants
 PRIORITY_EMOJIS = {"high": "🔴", "medium": "🟡", "low": "🔵"}
 PRIORITY_RANK = {"high": 0, "medium": 1, "low": 2}
+
+
+def _format_task_line(task: Task, indent: str = "") -> str:
+    """Standardizes task output with completion status, priority emoji, title, due date, and indentation."""
+    status = "✅" if task.completed else "🔄"
+    emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+    due = f" (Due: {task.due_date})" if task.due_date else ""
+    return f"{indent}{status} {emoji} {task.title}{due}\n"
 
 
 # Shared state for tools
@@ -57,6 +69,7 @@ _transcripts: list[dict] = []
 
 # ============ Calendar Tools ============
 
+
 def _check_calendar_events(date: str) -> list[str]:
     """Check events for a specific date. Returns list of event summaries."""
     global _calendar_events
@@ -64,25 +77,24 @@ def _check_calendar_events(date: str) -> list[str]:
     return [f"{e.title}: {e.start_time} - {e.end_time}" for e in events]
 
 
-def _add_calendar_event(title: str, start_time: str, end_time: str, description: str = "") -> str:
+def _add_calendar_event(
+    title: str, start_time: str, end_time: str, description: str = ""
+) -> str:
     """Add a new event to calendar. Returns confirmation."""
     global _calendar_events
     event = CalendarEvent(
-        title=title,
-        start_time=start_time,
-        end_time=end_time,
-        description=description
+        title=title, start_time=start_time, end_time=end_time, description=description
     )
     _calendar_events.append(event)
-    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}"
+    return f"✅ Event '{title}' scheduled from {start_time} to {end_time}. Got it! 📅"
 
 
 def _get_calendar_free_slots(date: str, duration_minutes: int = 60) -> list[str]:
     """Get available time slots for a given date."""
     global _calendar_events
     work_start = 9  # 9 AM
-    work_end = 20   # 8 PM (guardrail: no tasks after 8 PM)
-    
+    work_end = 20  # 8 PM (guardrail: no tasks after 8 PM)
+
     slots = []
     current_hour = work_start
     while current_hour < work_end:
@@ -99,19 +111,19 @@ def _get_todays_schedule() -> str:
     today = datetime.now().strftime("%Y-%m-%d")
     events = [e for e in _calendar_events if e.start_time.startswith(today)]
     events.sort(key=lambda e: e.start_time)
-    
+
     if not events:
         return "✨ Your schedule is clear today! 🥳"
-    
+
     schedule = "📅 **Today's Schedule**\n\n"
     schedule += "| Time | Event |\n"
     schedule += "|------|-------|\n"
-    
+
     for event in events:
-        start = event.start_time.split('T')[-1][:5]
-        end = event.end_time.split('T')[-1][:5]
+        start = event.start_time.split("T")[-1][:5]
+        end = event.end_time.split("T")[-1][:5]
         schedule += f"| {start} - {end} | {event.title} |\n"
-    
+
     return schedule
 
 
@@ -124,13 +136,16 @@ get_todays_schedule = function_tool(_get_todays_schedule)
 
 # ============ Task Management Tools ============
 
-def _add_task(title: str, priority: str = "medium", due_date: Optional[str] = None) -> str:
+
+def _add_task(
+    title: str, priority: str = "medium", due_date: Optional[str] = None
+) -> str:
     """Add a new task. Returns confirmation."""
     global _tasks
     task = Task(title=title, priority=priority, due_date=due_date)
     _tasks.append(task)
     emoji = PRIORITY_EMOJIS.get(priority, "⚪")
-    return f"✅ Task added: {emoji} '{title}'"
+    return f"✅ Task added: {emoji} '{title}'. Noted! 🚀"
 
 
 def _get_tasks(completed: Optional[bool] = None) -> str:
@@ -140,22 +155,19 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
         filtered = _tasks
     else:
         filtered = [t for t in _tasks if t.completed == completed]
-    
+
     if not filtered:
         if completed is False:
             return "✨ All caught up! No pending tasks. 🚀"
-        return "📋 No tasks found. 🥳"
-    
+        return "✨ No tasks found. You're all clear! 🥳"
+
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
 
     result = "📋 **Tasks**\n\n"
     for task in filtered:
-        status = "✅" if task.completed else "🔄"
-        emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
-        due = f" (Due: {task.due_date})" if task.due_date else ""
-        result += f"{status} {emoji} {task.title}{due}\n"
-    
+        result += _format_task_line(task)
+
     return result
 
 
@@ -165,7 +177,7 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            return f"✅ Marked '{title}' as completed. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
@@ -174,24 +186,22 @@ def _get_daily_standup() -> str:
     global _tasks
     completed = [t for t in _tasks if t.completed]
     pending = [t for t in _tasks if not t.completed]
-    
+
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
+        standup += _format_task_line(t, "  ")
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🥳\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
         for t in pending[:5]:
-            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
-            due = f" (Due: {t.due_date})" if t.due_date else ""
-            standup += f"  🔄 {emoji} {t.title}{due}\n"
+            standup += _format_task_line(t, "  ")
 
     return standup
 
@@ -205,12 +215,13 @@ get_daily_standup = function_tool(_get_daily_standup)
 
 # ============ Email Tools ============
 
+
 def _draft_email(to: str, subject: str, body: str) -> str:
     """Draft an email. Returns confirmation."""
     global _email_drafts
     draft = EmailDraft(to=to, subject=subject, body=body)
     _email_drafts.append(draft)
-    return f"✅ Email drafted to {to}: '{subject}'"
+    return f"✅ Email drafted to {to}: '{subject}'. Got it! ✉️"
 
 
 def _get_email_drafts() -> str:
@@ -218,10 +229,10 @@ def _get_email_drafts() -> str:
     global _email_drafts
     if not _email_drafts:
         return "📧 ✨ No email drafts yet. All quiet in the inbox! 🌊"
-    
+
     result = "📧 **Email Drafts**\n\n"
     for draft in _email_drafts:
-        snippet = draft.body[:100].replace('\n', '\n  ')
+        snippet = draft.body[:100].replace("\n", "\n  ")
         if len(draft.body) > 100:
             snippet += "..."
         result += f"• **To:** {draft.to}\n  **Subject:** {draft.subject}\n  **Body:** {snippet}\n\n"
@@ -235,12 +246,13 @@ get_email_drafts = function_tool(_get_email_drafts)
 
 # ============ Slack Tools ============
 
+
 def _draft_slack_message(channel: str, message: str) -> str:
     """Draft a Slack message. Returns confirmation."""
     global _slack_messages
     msg = SlackMessage(channel=channel, message=message)
     _slack_messages.append(msg)
-    return f"✅ Slack message drafted for #{channel}"
+    return f"✅ Slack message drafted for #{channel}. Noted! 💬"
 
 
 def _get_slack_messages() -> str:
@@ -248,10 +260,10 @@ def _get_slack_messages() -> str:
     global _slack_messages
     if not _slack_messages:
         return "💬 ✨ No Slack messages drafted. Team's all caught up! 🥳"
-    
+
     result = "💬 **Slack Messages**\n\n"
     for msg in _slack_messages:
-        formatted_msg = msg.message.replace('\n', '\n  ')
+        formatted_msg = msg.message.replace("\n", "\n  ")
         result += f"• **Channel:** #{msg.channel}\n  **Message:** {formatted_msg}\n\n"
     return result
 
@@ -262,6 +274,7 @@ get_slack_messages = function_tool(_get_slack_messages)
 
 
 # ============ Wellness Tools ============
+
 
 def _suggest_break(last_break_minutes_ago: int) -> str:
     """Suggest a break if needed (every 60-90 minutes)."""
@@ -276,10 +289,10 @@ def _log_break(break_type: str, duration_minutes: int) -> str:
     entry = {
         "type": break_type,
         "duration": duration_minutes,
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.now().isoformat(),
     }
     _breaks.append(entry)
-    return f"✅ Logged {break_type} break for {duration_minutes} minutes"
+    return f"✅ Logged {break_type} break for {duration_minutes} minutes. Relax and recharge! 🧘"
 
 
 def _get_weekly_insights() -> str:
@@ -287,16 +300,18 @@ def _get_weekly_insights() -> str:
     global _breaks
     total_breaks = len(_breaks)
     avg_break_duration = sum(b["duration"] for b in _breaks) / max(total_breaks, 1)
-    
+
     insights = "📊 **Weekly Wellness Insights**\n\n"
-    insights += f"• Breaks taken: {total_breaks}\n"
-    insights += f"• Average break duration: {avg_break_duration:.1f} minutes\n"
-    
+    insights += f"🧘 Breaks taken: {total_breaks}\n"
+    insights += f"⏰ Average break duration: {avg_break_duration:.1f} minutes\n"
+
     if total_breaks < 10:
-        insights += "💡 Tip: Try to take more frequent breaks for better productivity.\n"
+        insights += (
+            "💡 Tip: Try to take more frequent breaks for better productivity.\n"
+        )
     else:
         insights += "✅ Great job maintaining regular breaks!\n"
-    
+
     return insights
 
 
@@ -306,7 +321,7 @@ def _track_habit(habit_name: str, status: str) -> str:
     if habit_name not in _habits:
         _habits[habit_name] = []
     _habits[habit_name].append(status)
-    return f"✅ Tracked habit '{habit_name}': {status}"
+    return f"✅ Tracked habit '{habit_name}': {status}. Keep it up! 🚀"
 
 
 # Export both raw functions and function_tool wrapped versions
@@ -317,6 +332,7 @@ track_habit = function_tool(_track_habit)
 
 
 # ============ Transcription Tools ============
+
 
 def _transcribe_meeting(meeting_id: str) -> str:
     """Mock transcription of a meeting."""
@@ -332,13 +348,15 @@ Participant 2: Great. Let's schedule a follow-up for Wednesday.
 
 [End of meeting]
     """.strip()
-    
-    _transcripts.append({
-        "meeting_id": meeting_id,
-        "transcript": transcript,
-        "timestamp": datetime.now().isoformat()
-    })
-    
+
+    _transcripts.append(
+        {
+            "meeting_id": meeting_id,
+            "transcript": transcript,
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
+
     return transcript
 
 
@@ -349,10 +367,10 @@ def _extract_action_items(transcript: str) -> str:
     for line in lines:
         if "I'll" in line or "will" in line.lower():
             action_items.append(line.strip())
-    
+
     if not action_items:
-        return "No action items found."
-    
+        return "✨ No action items found in this meeting. All clear! 🥳"
+
     result = "✅ **Action Items**\n\n"
     for item in action_items:
         result += f"• {item}\n"
@@ -366,18 +384,22 @@ extract_action_items = function_tool(_extract_action_items)
 
 # ============ Guardrails Tools ============
 
+
 def _validate_time_slot(hour: int) -> str:
     """Validate if a time slot is within acceptable work hours (9 AM - 8 PM PKT)."""
     if hour >= 20:
         return "❌ Invalid: Task scheduled after 20:00. Work-life balance: no tasks after 8 PM PKT."
     if hour < 6:
-        return "❌ Invalid: Task scheduled before 6:00 AM. Consider respecting rest hours."
+        return (
+            "❌ Invalid: Task scheduled before 6:00 AM. Consider respecting rest hours."
+        )
     return f"✅ Valid: {hour:02d}:00 is within work hours (9 AM - 8 PM PKT)"
 
 
 def _get_current_time_pkt() -> str:
     """Get current time in PKT timezone."""
     from datetime import timezone, timedelta
+
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     return current.strftime("%Y-%m-%d %H:%M:%S PKT")
@@ -386,6 +408,7 @@ def _get_current_time_pkt() -> str:
 def _is_within_work_hours() -> str:
     """Check if current time is within work hours (9 AM - 8 PM PKT)."""
     from datetime import timezone, timedelta
+
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     if 9 <= current.hour < 20:
@@ -396,9 +419,10 @@ def _is_within_work_hours() -> str:
 def _suggest_optimal_focus_time() -> str:
     """Suggest optimal focus session time."""
     from datetime import timezone, timedelta
+
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
-    
+
     if current.hour < 11:
         return "📍 Optimal: 09:00-11:00 (Morning focus block)"
     elif current.hour < 16:
