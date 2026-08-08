@@ -10,10 +10,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from work_buddy.agent import RemoteWorkBuddy, create_remote_work_buddy
-from work_buddy.tools import (
+from work_buddy.agent import RemoteWorkBuddy  # noqa: E402
+from work_buddy.tools import (  # noqa: E402
     _add_task as add_task,
-    _get_tasks as get_tasks,
     _get_daily_standup as get_daily_standup,
     _add_calendar_event as add_calendar_event,
     _get_todays_schedule as get_todays_schedule,
@@ -40,7 +39,7 @@ async def test_remote_work_buddy():
     base_url = os.getenv("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com")
     tracing_enabled = os.getenv("TRACING_ENABLED", "false").lower() == "true"
     
-    print(f"\n📍 Timezone: Asia/Karachi (PKT)")
+    print("\n📍 Timezone: Asia/Karachi (PKT)")
     print(f"🔑 API Key: {'Set' if api_key else 'Not set (using mock mode)'}")
     print(f"🌐 Base URL: {base_url}")
     print(f"📊 Tracing: {'Enabled' if tracing_enabled else 'Disabled'}")
@@ -302,6 +301,23 @@ def run_mock_tests():
     
     action_items = extract_action_items(transcript)
     print(f"\n{action_items}")
+
+    # Test UX Verifications
+    print("\n" + "=" * 60)
+    print("🎨 Mock Test: UX & Accessibility Verifications")
+    print("=" * 60)
+    from work_buddy.tools import _format_task_line, Task
+    test_task = Task(title="Test Task Priority", priority="high", completed=False)
+    line = _format_task_line(test_task, indent="  ")
+    assert "🔴" in line, "Should include priority emoji"
+    assert "🔄" in line, "Should include pending status icon"
+    assert "Test Task Priority" in line, "Should include task title"
+    assert line.startswith("  "), "Should handle indentation correctly"
+    print("✅ Centralized task line formatting verified!")
+
+    empty_actions = extract_action_items("Meeting transcript without action items.")
+    assert "✨" in empty_actions and "🥳" in empty_actions, "Should contain positive reinforcement empty state"
+    print("✅ Positive empty state for action items verified!")
     
     # Summary
     print("\n" + "=" * 60)
