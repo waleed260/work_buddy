@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-15 - Unifying Task Formatting and Tone Consistency
+**Learning:** In text-based terminal utilities, small variations in message construction (such as varying checkmark placement, missing details in completed lists, or mismatched conversational tones) undermine the user's confidence in the system's precision. Centralizing output generation to a single formatting utility ensures visual symmetry across all workspace components (like general tasks and the daily standup), while adhering to a balanced reinforcement loop pattern creates a satisfying, cohesive user journey.
+**Action:** Centralize text presentation and formatting structures to formatting helper functions, and enforce identical visual properties across distinct lists with informational parity. Ensure all tool confirmation messages append an appropriate reinforcement phrase.
