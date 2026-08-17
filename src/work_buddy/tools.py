@@ -165,7 +165,8 @@ def _complete_task(title: str) -> str:
     for task in _tasks:
         if task.title == title:
             task.completed = True
-            return f"✅ Marked '{title}' as completed"
+            emoji = PRIORITY_EMOJIS.get(task.priority, "⚪")
+            return f"✅ Marked {emoji} '{title}' as completed. Nice work! 🥳"
     return f"Task '{title}' not found"
 
 
