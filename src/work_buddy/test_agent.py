@@ -188,6 +188,10 @@ async def test_remote_work_buddy():
         
         action_items = extract_action_items(transcript)
         print(f"\n{action_items}")
+
+        # Test empty action items state
+        empty_action_items = extract_action_items("No action items here.")
+        assert "✨ No action items found in this meeting. All clear! 🥳" in empty_action_items
     except Exception as e:
         print(f"❌ Error in Test 8: {e}")
     
@@ -302,6 +306,10 @@ def run_mock_tests():
     
     action_items = extract_action_items(transcript)
     print(f"\n{action_items}")
+
+    # Test empty action items state
+    empty_action_items = extract_action_items("No action items here.")
+    assert "✨ No action items found in this meeting. All clear! 🥳" in empty_action_items
     
     # Summary
     print("\n" + "=" * 60)
