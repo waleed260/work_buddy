@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-09-26 - Positive Reinforcement in Meeting Empty States
+**Learning:** Returning a plain "No action items found" string feels like a dead-end technical fallback. Transforming zero-state meeting summaries into affirmative micro-copy (e.g., "✨ No action items found in this meeting. All clear! 🥳") provides immediate delight and clear reassurance that nothing was missed.
+**Action:** Always phrase summary empty states positively, reinforcing clarity with spark/celebration emojis instead of neutral flat text.
