@@ -303,6 +303,12 @@ def run_mock_tests():
     action_items = extract_action_items(transcript)
     print(f"\n{action_items}")
     
+    # Test Empty Action Items State
+    empty_transcript = "[Meeting Transcript - MTG-002]\nParticipant 1: Hello everyone.\nParticipant 2: Good morning!\n[End of meeting]"
+    empty_action_items = extract_action_items(empty_transcript)
+    assert "✨ No action items found in this meeting. All clear! 🥳" in empty_action_items
+    print(f"\nEmpty Action Items Check: {empty_action_items}")
+
     # Summary
     print("\n" + "=" * 60)
     print("📊 Mock Test Summary")
