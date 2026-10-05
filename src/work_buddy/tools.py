@@ -144,7 +144,7 @@ def _get_tasks(completed: Optional[bool] = None) -> str:
     if not filtered:
         if completed is False:
             return "✨ All caught up! No pending tasks. 🚀"
-        return "📋 No tasks found. 🥳"
+        return "✨ No tasks found. You're all clear! 🥳"
     
     # Sort by priority
     filtered.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -166,7 +166,7 @@ def _complete_task(title: str) -> str:
         if task.title == title:
             task.completed = True
             return f"✅ Marked '{title}' as completed"
-    return f"Task '{title}' not found"
+    return f"⚠️ Task '{title}' not found."
 
 
 def _get_daily_standup() -> str:
@@ -177,14 +177,17 @@ def _get_daily_standup() -> str:
     
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
-    for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🥳\n"
+    else:
+        for t in completed[-5:]:
+            emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+            due = f" (Due: {t.due_date})" if t.due_date else ""
+            standup += f"  ✅ {emoji} {t.title}{due}\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -351,7 +354,7 @@ def _extract_action_items(transcript: str) -> str:
             action_items.append(line.strip())
     
     if not action_items:
-        return "No action items found."
+        return "✨ No action items found in this meeting. All clear! 🥳"
     
     result = "✅ **Action Items**\n\n"
     for item in action_items:
