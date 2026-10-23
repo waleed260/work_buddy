@@ -238,9 +238,10 @@ get_email_drafts = function_tool(_get_email_drafts)
 def _draft_slack_message(channel: str, message: str) -> str:
     """Draft a Slack message. Returns confirmation."""
     global _slack_messages
-    msg = SlackMessage(channel=channel, message=message)
+    clean_channel = channel.lstrip("#")
+    msg = SlackMessage(channel=clean_channel, message=message)
     _slack_messages.append(msg)
-    return f"✅ Slack message drafted for #{channel}"
+    return f"✅ Slack message drafted for #{clean_channel}"
 
 
 def _get_slack_messages() -> str:
