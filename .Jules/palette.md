@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-20 - Encouraging Micro-Copy in Meeting Summaries
+**Learning:** Returning a plain "No action items found." message after processing a meeting transcript feels unhelpful and blunt. Replacing plain zero-state strings with reassuring, delightful micro-copy (e.g. "✨ No action items found in this meeting. All clear! 🥳") turns an empty result into a micro-moment of satisfaction and clarity for the user.
+**Action:** Always replace plain negative placeholders in summary/extraction functions with clear, encouraging micro-copy and a micro-delight emoji.
