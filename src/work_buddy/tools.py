@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -178,13 +178,15 @@ def _get_daily_standup() -> str:
     standup = "📋 **Daily Standup**\n\n"
     standup += "**Completed:**\n"
     for t in completed[-5:]:
-        standup += f"  ✅ {t.title}\n"
+        emoji = PRIORITY_EMOJIS.get(t.priority, "⚪")
+        due = f" (Due: {t.due_date})" if t.due_date else ""
+        standup += f"  ✅ {emoji} {t.title}{due}\n"
     if not completed:
-        standup += "  (none yet)\n"
+        standup += "  ✨ You're just getting started! No tasks completed yet. 🥳\n"
 
     standup += "\n**In Progress:**\n"
     if not pending:
-        standup += "  (none)\n"
+        standup += "  ✨ All clear! No tasks in progress. 🥳\n"
     else:
         # Sort pending by priority
         pending.sort(key=lambda t: PRIORITY_RANK.get(t.priority, 99))
@@ -377,7 +379,6 @@ def _validate_time_slot(hour: int) -> str:
 
 def _get_current_time_pkt() -> str:
     """Get current time in PKT timezone."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     return current.strftime("%Y-%m-%d %H:%M:%S PKT")
@@ -385,7 +386,6 @@ def _get_current_time_pkt() -> str:
 
 def _is_within_work_hours() -> str:
     """Check if current time is within work hours (9 AM - 8 PM PKT)."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     if 9 <= current.hour < 20:
@@ -395,7 +395,6 @@ def _is_within_work_hours() -> str:
 
 def _suggest_optimal_focus_time() -> str:
     """Suggest optimal focus session time."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     
