@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-07 - Input Normalization and Preventing Double Visual Feedback in CLI Outputs
+**Learning:** In CLI/conversational tools where entities carry customary symbols (e.g., '#' for Slack channels), users alternate between entering with or without the symbol. Failing to normalize the input causes awkward artifacts like `##channel`. Additionally, when formatting functions return their own status icons (e.g., `✅`), calling layers should never prepend their own icons, as redundant visual markers (`✅ ✅`) erode user trust and visual polish.
+**Action:** Always sanitize user inputs (e.g. `channel.lstrip('#')`) before persistence and display formatting, and establish clear ownership of feedback indicators across architectural layers.
