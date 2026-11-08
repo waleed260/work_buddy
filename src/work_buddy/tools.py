@@ -4,7 +4,7 @@ Provides calendar, email, task management, and wellness integrations.
 Compatible with OpenAI Agents SDK.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 from pydantic import BaseModel
 from agents.tool import function_tool
@@ -238,9 +238,10 @@ get_email_drafts = function_tool(_get_email_drafts)
 def _draft_slack_message(channel: str, message: str) -> str:
     """Draft a Slack message. Returns confirmation."""
     global _slack_messages
-    msg = SlackMessage(channel=channel, message=message)
+    clean_channel = channel.lstrip('#')
+    msg = SlackMessage(channel=clean_channel, message=message)
     _slack_messages.append(msg)
-    return f"✅ Slack message drafted for #{channel}"
+    return f"✅ Slack message drafted for #{clean_channel}"
 
 
 def _get_slack_messages() -> str:
@@ -377,7 +378,6 @@ def _validate_time_slot(hour: int) -> str:
 
 def _get_current_time_pkt() -> str:
     """Get current time in PKT timezone."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     return current.strftime("%Y-%m-%d %H:%M:%S PKT")
@@ -385,7 +385,6 @@ def _get_current_time_pkt() -> str:
 
 def _is_within_work_hours() -> str:
     """Check if current time is within work hours (9 AM - 8 PM PKT)."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     if 9 <= current.hour < 20:
@@ -395,7 +394,6 @@ def _is_within_work_hours() -> str:
 
 def _suggest_optimal_focus_time() -> str:
     """Suggest optimal focus session time."""
-    from datetime import timezone, timedelta
     pkt = timezone(timedelta(hours=5))
     current = datetime.now(pkt)
     
