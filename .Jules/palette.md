@@ -9,3 +9,7 @@
 ## 2026-06-06 - Scannability of Multi-line List Items in CLI
 **Learning:** When presenting list items with multiple properties (like Email or Slack drafts) in a CLI, using bold labels (e.g., **To:**) provides clear visual anchors. Furthermore, indenting subsequent lines of an item to align with the first line's text (ignoring the bullet) prevents the text from "leaking" back to the left margin, which maintains the vertical rhythm and makes it much easier to distinguish between different list items.
 **Action:** Use bold Markdown for property labels and ensure multi-line content is indented by exactly two spaces to match the primary bullet's text alignment.
+
+## 2026-06-07 - Informational Parity Between Active and Completed Items
+**Learning:** When transitioning items between lifecycle states (e.g., in progress to completed in a daily standup), dropping metadata such as priority indicators or due dates causes an informational asymmetry. Retaining priority markers and due dates on completed items provides valuable context on what critical accomplishments were achieved and delivers closure without forcing the user to mentally reconstruct the original urgency.
+**Action:** Preserve metadata like priority markers and due dates consistently across all task states (both completed and in progress) in status summaries.
